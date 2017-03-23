@@ -1,0 +1,9 @@
+export(parm, RunRMD, SimRMD, RunRMDEff, SimRMDEff)
+import(coda, boot, rjags, mvtnorm)
+importFrom("grDevices", "dev.off", "pdf")
+importFrom("graphics", "lines", "plot")
+importFrom("stats", "delete.response", "median", "model.frame",
+             "model.matrix", "model.response", "pnorm", "qnorm",
+             "quantile", "rbeta", "rgamma", "rnorm", "runif", "sd",
+             "terms", "update")
+importFrom("utils", "write.table")
