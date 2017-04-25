@@ -1,4 +1,4 @@
-12cbe7747df60cc83a812f1b3c0ce9a3 *DESCRIPTION
+05cf6177b33c874e735b8e76839958e6 *DESCRIPTION
 7c56fa8c4f06f689952cb73272a1d178 *NAMESPACE
 f755388df8590f1b667a5e035c89e390 *R/AcrPat.R
 990767584275c787047cae09533ebf63 *R/BEst.R
@@ -14,13 +14,14 @@ f3adf4eaa31f6ec0ed27d2e0364040d1 *R/ToxGrade2nTTP.R
 21c635825503ae24d6ba09e5e95bf9e0 *R/Trial.Simulation.R
 52451f09a8c3443b756c45ce0161306d *R/dose.recom.R
 efdc40f5f84ece46d8580e2f3a20d11e *R/scenario_nTTB_nonNormalise_CDR4sc.R
-a9281026d39a500d30c3eacaaad9c545 *R/structure.R
+4b04cde5cef0ad2a9223315f69ab13c2 *R/structure.R
 13976a8adddcb28fa894dd8bd8b2fc07 *R/summaryRMD.R
 a5586a211e140d2945cbc509d6495caa *data/eff_dat.RData
 1c6f5a1a7747dc7b06bf87a4a762cbd5 *data/patdata.RData
 7171e972419505d3a91c6545262a3bda *data/probaT.RData
-2b76692125ac83dbfcc3ab98d8a0e1a1 *data/tox_dat.RData
+3d7b9a745471a89bbb7628149719dcb4 *data/tox_dat.RData
 dcda1088877ede2e26a709b36f8829a3 *data/tox_dat2.RData
+36af674946f9ef078448d1487ca79d7f *data/tox_dat_bytype.RData
 29ef33f1ff159f2565f77cfb2b8778d8 *data/tox_matrix.RData
 e5d7e3670e43804e6250e42fdcd0ae35 *man/RunRMD.Rd
 f318f9df2fcf2490282965996f04af30 *man/RunRMDEff.Rd
@@ -31,4 +32,5 @@ f318f9df2fcf2490282965996f04af30 *man/RunRMDEff.Rd
 b1ad486fbd996a76da9f54a264485825 *man/patdata.Rd
 6ddb51acd6dbea6022b839f736f19ca0 *man/probaT.Rd
 4dd9dfff0f6d5eab9b88f68eed4adbb5 *man/tox_dat.Rd
+fd29aa78bd1b81f3a20f185a3974059e *man/tox_dat_bytype.Rd
 be6cf9079511d6e5c7600bacc9f2851c *man/tox_matrix.Rd
