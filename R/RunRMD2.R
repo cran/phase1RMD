@@ -10,9 +10,7 @@ RunRMD2 <- function(formula, data, control, iter, burnin, thin, chains, pathout,
     fit2 <- fit
   };
   #fit <- BEst2(formula=formula, data=patData, control=control, iter=iter, burnin=burnin, thin=thin, chains=chains, pathout=pathout)
-  try(summaryRMD(fit, fit2, pathout, numTrials, thisTrial)) ## TODO --> write the function to produce summary, effect size, traceplots, density plots;
-  
-  
+  try(summaryRMD(fit, fit2, pathout, numTrials, thisTrial), silent=T) ## TODO --> write the function to produce summary, effect size, traceplots, density plots;
 
   ## method 1: using existing observed patient covariates
 
@@ -114,7 +112,7 @@ RunRMD2 <- function(formula, data, control, iter, burnin, thin, chains, pathout,
     min.br <- min(fit$Brisk)
     dose.est <- which.min(fit$Brisk)
     res <- c(min.br, dose.est)
-    print(res)
+    #print(res)
   #colnames(res) <- c("cycle", "min.Bayes.risk", "dose.suggestion")
   #print('dose rec');print(res);
   return(res)

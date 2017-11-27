@@ -1,4 +1,4 @@
-RunRMD <- function(data, control, iter=6000, burnin=1000, thin=1, chains=1, tox.target=0.28){
+RunRMD <- function(data, control, trlSize = 36, tox.target=0.28, sdose = 1:6, strDose = 1, iter=10000, burnin=4000, thin=1, chains=1){
 
 # RunRMD <- function(data, formula=nTTP ~ dose + cycle, tox.target=0.28, sdose=1:6, MaxCycle=6,
 			# iter=10000, burnin=4000, thin=1, chains=1, seed = 2411, control=list(
@@ -10,7 +10,8 @@ RunRMD <- function(data, control, iter=6000, burnin=1000, thin=1, chains=1, tox.
 
 
   formula <- nTTP ~ dose + cycle;
-  sdose <- 1:6;
+  strDose <- strDose; sdose <- sdose; 
+  trlSize <- trlSize;
   MaxCycle <- 6;
   seed <- 2441;
   control <- list(
@@ -154,17 +155,38 @@ RunRMD <- function(data, control, iter=6000, burnin=1000, thin=1, chains=1, tox.
     res <- c(min.br, dose.est)
   #colnames(res) <- c("cycle", "min.Bayes.risk", "dose.suggestion")
   #print('dose rec');print(res);
-  summary1.matrix <- rbind(mean.matrix[1,],SD.matrix[1,],median.matrix[1,]);
-  #print('summary1.matrix');print(summary1.matrix);
-  rownames(summary1.matrix) <- c('mean','sd','median');
-  colnames(summary1.matrix) <- paste0('Dose',sdose);
-  summary2.matrix <- rbind(q1.matrix[1,],q2.matrix[1,],median.matrix[1,],q3.matrix[1,],q4.matrix[1,]);
-  #print(summary2.matrix);
-  rownames(summary2.matrix) <- c('2.5%','25%','50%','75%','97.5%');
-  colnames(summary2.matrix) <- paste0('Dose',sdose);
-  
-  res <- list('DOSE-RECOMMENDED'=dose.est,'Estimate'=summary1.matrix,
-  'Quantiles'=summary2.matrix);
- 
+  dose.name <- NULL;
+  for (d in sdose){dose.name <- c(dose.name, paste('Dose ',d,sep=''))}
+  cycle.name <- NULL;
+  for (d in 1:MaxCycle){cycle.name <- c(cycle.name, paste('toxpf',d,sep=''))}
+  summary.matrix <- array(0, dim=c(MaxCycle,8,max(sdose)), dimnames = list(cycle.name,c('mean','sd','median','2.5%','25%','50%','75%','97.5%'),dose.name));
+  for (i in 1:MaxCycle){
+	  summary1.matrix <- rbind(mean.matrix[1,],SD.matrix[1,],median.matrix[1,]);
+	  #print('summary1.matrix');print(summary1.matrix);
+	  rownames(summary1.matrix) <- c('mean','sd','median');
+	  colnames(summary1.matrix) <- paste0('Dose',sdose);
+	  summary2.matrix <- rbind(q1.matrix[1,],q2.matrix[1,],median.matrix[1,],q3.matrix[1,],q4.matrix[1,]);
+	  #print(summary2.matrix);
+	  rownames(summary2.matrix) <- c('2.5%','25%','50%','75%','97.5%');
+	  colnames(summary2.matrix) <- paste0('Dose',sdose);
+	  summary.matrix[i,,] <- rbind(summary1.matrix, summary2.matrix);
+  }
+  #res <- list('nxtdose'=dose.est,'Estimate'=summary1.matrix, 'Quantiles'=summary2.matrix);
+  cycle1.index <- seq(1, MaxCycle*length(sdose), MaxCycle);
+  cycle1.nTTP <- nTTP.p[cycle1.index,];
+  cat('\n');
+  cat('Model: RMD with longitudinal toxicity\n');cat('\n');
+  cat('Doses (skeleton):');cat('\n');
+  print(sdose);
+  cat('\n');
+  cat(paste('The maximum sample size is: ',trlSize,sep=''));cat('\n');
+  #cat(paste('The current enrolled number of patients are: ',max(patdata$cohort)*3,sep=''));cat('\n');
+  #cat(paste('The current enrolled cohort is: ',max(patdata$cohort),sep=''));cat('\n');cat('\n');
+  cat('Posterior estimates (mean) of toxicity:');cat('\n');
+  colnames(mean.matrix) <- dose.name;rownames(mean.matrix) <- cycle.name;
+  print(round(mean.matrix,3));cat('\n');
+  cat(paste('Next recommended dose: ',dose.est,sep=''));cat('\n');
+  res <- list('nxtdose'=dose.est,'tox.est'=round(summary.matrix,3), 'nTTP.p'=nTTP.p, 'sdose'=sdose, 'mean'=mean.matrix, 'MaxCycle'=MaxCycle);
+  attr(res,'class') <- 'RunRMDVal'
   return(res)
 }

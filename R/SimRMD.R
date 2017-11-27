@@ -1,8 +1,15 @@
 
-SimRMD <- function(seed=2441, strDose=1, chSize=3, trlSize=36, numTrials=1000, sdose=1:6, MaxCycle=6,
-                        tox.target=0.28, control, iter=10000, burnin=4000, thin=1, chains=1, pathout="./",
-                        sc, trend = 0.1) {
+SimRMD <- function(seed=2014, strDose=1, chSize=3, trlSize=36, numTrials=1000, sdose=1:6, MaxCycle=6, 
+                        tox.target=0.28, control, iter=10000, burnin=4000, thin=1, chains=1, pathout="./", tox.matrix,
+                        wm = matrix(c(0, 0.5, 0.75, 1  , 1.5, 
+                                        0, 0.5, 0.75, 1  , 1.5, 
+                                        0, 0  , 0   , 0.5, 1  ), 
+                                        byrow = T, ncol = 5), toxmax = 2.5) {
 
+# SimRMD <- function(seed=2441, strDose=1, chSize=3, trlSize=36, numTrials=1000, sdose=1:6, MaxCycle=6,
+                        # tox.target=0.28, control, iter=10000, burnin=4000, thin=1, chains=1, pathout="./",
+                        # sc, trend = 0.1) {						
+						
 # SimRMD <- function(strDose = 1, chSize = 3, trlSize = 36, numTrials =
                  # 1000, sdose = 1:6, MaxCycle = 6, sd.gamma = 5,
                  # sd.epsilon = 1, sc = probaT, formula = nTTP ~ dose +
@@ -40,7 +47,7 @@ SimRMD <- function(seed=2441, strDose=1, chSize=3, trlSize=36, numTrials=1000, s
   #     actSize: actual sample size.
   #     numDLTs: number of DLTs.
   #     runTime: running time of the simulation.
-
+options(warn=-1)
 sd.gamma <- 5; sd.epsilon = 1;
 formula <- nTTP ~ dose + cycle;
 loss.fun <- "default";
@@ -98,11 +105,27 @@ if (loss.fun == 'default'){
   actSize <- rep(0, numTrials)  # actual sample size
   doseTrace_AllTrials <- NULL;
   
+  #reformat toxicity matrix
+  dose.name <- NULL;
+  for (d in sdose){dose.name <- c(dose.name, paste('Dose Level ',d,sep=''))}
+  grade.name <- NULL;
+  for (g in 1:5){grade.name <- c(grade.name, paste('Grade ',g-1,sep=''))}
+  new.tox.matrix <- vector('list', MaxCycle);
+  toxtype = c("Neurological", "Renal", "Hematological")
+  for (c in 1:MaxCycle){
+    new.tox.matrix[[c]] <- array(0, dim=c(length(toxtype), 5, length(sdose)),  dimnames = list(toxtype,grade.name,dose.name));
+    for (d in sdose){
+      this <- tox.matrix[d,c,,];
+      new.tox.matrix[[c]][,,d] <- this;
+    }
+  }
+  tox.matrix <- new.tox.matrix;
+  
   # calculate the probability matrix for all dosage and cycles
   
-  
+  pb <- txtProgressBar(0,numTrials);
   for (k in 1:numTrials) {
-    
+    setTxtProgressBar(pb,k);
     currTime <- 0
     doseA <- strDose[1] # initial dosage
     cmPat <- chSize # initial sample size
@@ -140,7 +163,7 @@ if (loss.fun == 'default'){
 	  y = NULL;dlt=NULL;
 	  for (i in 1:dim(X)[1]){
 	    #temp=GenScn_nTTP(sc, dose=X[i,2], count.cycle=X[i,3],trend=trend);
-		temp=GenTTP(sc, dose=X[i,2], count.cycle=X[i,3],trend=trend);
+		temp=GenTTP(tox.matrix, wm = wm, toxmax = toxmax, dose=X[i,2], count.cycle=X[i,3]);
 		y=c(y,temp$nttp)
 		dlt=c(dlt,temp$dlt);
 		#print('test1');print(temp$nttp);print(temp$dlt);
@@ -207,8 +230,8 @@ if (loss.fun == 'default'){
 			}
 		}
 	}
-	print('masterData');print(masterData);
-	print('patData');print(patData);
+	#print('masterData');print(masterData);
+	#print('patData');print(patData);
 	#debug
 	rec_patData <- rbind(rec_patData,patData,rep(-999,dim(patData)[2]));
 	#debug
@@ -288,35 +311,35 @@ if (loss.fun == 'default'){
 	}
     obsDLT[k] <- sum(patData[,"DLT"])
     actSize[k] <- cmPat
-    write.table(recMat, file=paste(pathout, "/", k, "/recMat.txt", sep=""))    
-	write.table(alcMat, file=paste(pathout, "/", k, "/alcMat.txt", sep=""))
-    write.table(dropMat_DLT, file=paste(pathout, "/", k, "/dropMat_DLT.txt", sep=""))   
-	write.table(dropMat_RND, file=paste(pathout, "/", k, "/dropMat_RND.txt", sep=""))
-	write.table(dropMat_all, file=paste(pathout, "/", k, "/dropMat_all.txt", sep=""))
-	write.table(nTTP_rec, file=paste(pathout, "/", k, "/nTTP_rec.txt", sep=""))
-	write.table(DLT_rec, file=paste(pathout, "/", k, "/DLT_rec.txt", sep=""))
-	write.table(nTTP_cycle_rec, file=paste(pathout, "/", k, "/nTTP_cycle_rec.txt", sep=""))
-	write.table(DLT_cycle_rec, file=paste(pathout, "/", k, "/DLT_cycle_rec.txt", sep=""))	
+    try(write.table(recMat, file=paste(pathout, "/", k, "/recMat.txt", sep="")), silent=T)
+	try(write.table(alcMat, file=paste(pathout, "/", k, "/alcMat.txt", sep="")), silent=T)
+    # write.table(dropMat_DLT, file=paste(pathout, "/", k, "/dropMat_DLT.txt", sep=""))   
+	# write.table(dropMat_RND, file=paste(pathout, "/", k, "/dropMat_RND.txt", sep=""))
+	# write.table(dropMat_all, file=paste(pathout, "/", k, "/dropMat_all.txt", sep=""))
+	# write.table(nTTP_rec, file=paste(pathout, "/", k, "/nTTP_rec.txt", sep=""))
+	# write.table(DLT_rec, file=paste(pathout, "/", k, "/DLT_rec.txt", sep=""))
+	# write.table(nTTP_cycle_rec, file=paste(pathout, "/", k, "/nTTP_cycle_rec.txt", sep=""))
+	# write.table(DLT_cycle_rec, file=paste(pathout, "/", k, "/DLT_cycle_rec.txt", sep=""))	
   }
 
 
   #debug
-  write.table(rec_patData,file=paste(pathout,'/patData.txt',sep=''));
+  try(write.table(rec_patData,file=paste(pathout,'/patData.txt',sep='')), silent=T);
   #debug
 
   #debug
-  write.table(alcMat,file=paste(pathout,'/alcMat.txt',sep=''));
+  try(write.table(alcMat,file=paste(pathout,'/alcMat.txt',sep='')), silent=T);
   #debug
 
-  write.table(recMat,file=paste(pathout,'/recMat.txt',sep=''));
+  try(write.table(recMat,file=paste(pathout,'/recMat.txt',sep='')), silent=T);
 
-  write.table(dropMat_DLT,file=paste(pathout,'/dropMat_DLT.txt',sep=''));
-  write.table(dropMat_RND,file=paste(pathout,'/dropMat_RND.txt',sep=''));
-  write.table(dropMat_all,file=paste(pathout,'/dropMat_all.txt',sep=''));
-  write.table(nTTP_rec, file=paste(pathout, "/nTTP_rec.txt", sep=""))
-  write.table(DLT_rec, file=paste(pathout, "/DLT_rec.txt", sep=""))  
-  write.table(nTTP_cycle_rec, file=paste(pathout, "/nTTP_cycle_rec.txt", sep=""))
-  write.table(DLT_cycle_rec, file=paste(pathout, "/DLT_cycle_rec.txt", sep=""))	  
+  # write.table(dropMat_DLT,file=paste(pathout,'/dropMat_DLT.txt',sep=''));
+  # write.table(dropMat_RND,file=paste(pathout,'/dropMat_RND.txt',sep=''));
+  # write.table(dropMat_all,file=paste(pathout,'/dropMat_all.txt',sep=''));
+  # write.table(nTTP_rec, file=paste(pathout, "/nTTP_rec.txt", sep=""))
+  # write.table(DLT_rec, file=paste(pathout, "/DLT_rec.txt", sep=""))  
+  # write.table(nTTP_cycle_rec, file=paste(pathout, "/nTTP_cycle_rec.txt", sep=""))
+  # write.table(DLT_cycle_rec, file=paste(pathout, "/DLT_cycle_rec.txt", sep=""))	  
   
   #plot dose Trace
   pdf(file=paste(pathout,'/doseTrace.pdf',sep=''));
@@ -325,16 +348,89 @@ if (loss.fun == 'default'){
   }
   dev.off();
   
-  timeLapse <- round((proc.time() - timeStart) / 60, 2)
+  #timeLapse <- round((proc.time() - timeStart) / 60, 2)
   
   results <- list(alcMat/colSums(alcMat),
                   apply(recMat, 1, sum)/numTrials, 
                   median(obsDLT), 
-                  median(actSize), timeLapse)
+                  median(actSize))
   names(results) <- c("Allocation", "Selection", 
                       "MedianDLT", "MedianSize"
                       )
+  cat('\n');
+  cat(paste('Operating characteristics based on ',numTrials,' simulations:\n',sep=''));cat('\n');
+  cat(paste('Sample size ',trlSize,'\n',sep=''));cat('\n');
+  output_matrix <- rbind(matrix(results$Allocation[2:(length(sdose)+1)],nrow=1), matrix(results$Selection[2:(length(sdose)+1)],nrow=1));
+  dose.name <- NULL;
+  for (d in sdose){dose.name <- c(dose.name, paste('Dose ',d,sep=''))}
+  cycle.name <- NULL;
+  for (c in 1:MaxCycle){cycle.name <- c(cycle.name, paste('mnTTP.',c,sep=''))}
+  #print(output_matrix);print(dose.name)
+  colnames(output_matrix) <- dose.name;
+  rownames(output_matrix) <- c('Allocation %', 'Recommendation %');
+  cat('$op.table\n');
+  print(round(output_matrix,3));cat('\n');
+  op.table <- output_matrix;
+  #print out true nTTP
+               nTTP.array <- function(wm) {
+                        nTTP <- array(NA, c(rep(5, nrow(wm))))
+                        capacity <- 5^(nrow(wm))
+                        for(tt in 1 : capacity) {
+                                index <- vec2array(tt, dim = c(rep(5, nrow(wm))))
+                                nTTP[tt] <- sqrt(sum(wm[t(rbind(1 : nrow(wm), index))]^2)) / toxmax
+                        }
+                        return(nTTP)
+                }
+                nTTP.all <- nTTP.array(wm)
 
+               pDLT <- function(proba, wm){    
+                        DLT_array <- array(NA, c(rep(5, nrow(wm))))
+                        capacity <- 5^(nrow(wm))
+                        for(tt in 1 : capacity) {
+                                index <- vec2array(tt, dim = c(rep(5, nrow(wm))))
+                                DLT_array[tt] <- as.numeric(max(wm[t(rbind(1 : nrow(wm), index))]) >= 1)
+                        }
+                        return(sum(proba * DLT_array))
+                }
+                
+                ####compute mean nTTP given probability array######
+                mnTTP <- function(proba, nTTP.all){    
+                        return(sum(proba * nTTP.all))
+                }
+                nTTP_prob <- function(nTTP.prob) {
+                nTTProb <- array(NA, c(rep(5, nrow(nTTP.prob))))
+                        capacity <- 5^(nrow(nTTP.prob))
+                        for(tt in 1 : capacity) {
+                                index <- vec2array(tt, dim = c(rep(5, nrow(nTTP.prob))))
+                                nTTProb[tt] <- prod(nTTP.prob[t(rbind(1 : nrow(nTTP.prob), index))])
+                        }
+                        return(nTTProb)
+                }
+                #proba <- outer(outer(nTTP.prob[1, ], nTTP.prob[2, ]), nTTP.prob[3, ])
+				sc.mat <- matrix(0,nrow=MaxCycle, ncol=max(sdose)); pdlt <- matrix(0,nrow=MaxCycle, ncol=max(sdose));
+                for(i in 1:MaxCycle){   ##loop through cycle
+                        for(j in 1:max(sdose)){
+                                nTTP.prob <- tox.matrix[[i]][, ,j]
+                                proba <- nTTP_prob(nTTP.prob)
+								nTTP.all <- nTTP.array(wm)
+                                sc.mat[i, j] <- round(mnTTP(proba, nTTP.all), 4)
+                                pdlt[i, j] <- round(pDLT(proba, wm), 4)
+                        }
+                }
+                sc <- rbind(sc.mat, pdlt[1, ])
+                colnames(sc) <- dose.name
+                rownames(sc) <- c(cycle.name,"pDLT")
+				cat('$sc\n');
+				sc <- round(sc, 3);
+                print(sc);cat('\n');
+				
+				
+  results <- list(alcMat/colSums(alcMat),
+                  apply(recMat, 1, sum)/numTrials, 
+                  median(obsDLT), median(actSize),
+				  op.table, sc)
+  names(results) <- c("Allocation", "Selection", 
+                      "MedianDLT", "MedianSize", "op.table", "sc")
   return(results)
   
 }

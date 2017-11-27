@@ -167,11 +167,11 @@ is.parm <- function(x)
 }
 
 
-Tox2nTTP <- function(tox = c(0,0,0), wm = matrix(c(0, 0.5, 0.75, 1  , 1.5, 
+Tox2nTTP <- function(tox = c(1,2,0), wm = matrix(c(0, 0.5, 0.75, 1  , 1.5, 
                                         0, 0.5, 0.75, 1  , 1.5, 
                                         0, 0  , 0   , 0.5, 1  ), 
-                                        byrow = T, ncol = 5), tox.max = 2.5)
+                                        byrow = T, ncol = 5), toxmax = 2.5)
 {
 	res <- c(wm[,1][tox[1]],wm[,2][tox[2]],wm[,3][tox[3]]);
-	return(sqrt(sum(res^2))/tox.max);
+	return(sqrt(sum(res^2))/toxmax);
 }
