@@ -35,21 +35,21 @@ summaryRMD <- function(fit, fit2, pathout, numTrials=1, thisTrial){
   write.table(res$quantile, file=paste(pathout,  "/", thisTrial, "/quanGamma", cmPat, ".txt", sep=""))
   write.table(effectiveSize(gamma.mc), file=paste(pathout,  "/", thisTrial, "/sizeGamma", cmPat, ".txt", sep=""))
 
-  pdf(file=paste(pathout,  "/", thisTrial, "/traceParms", cmPat, ".pdf", sep=""))
-  plot(parms)
-  dev.off()  
+  #pdf(file=paste(pathout,  "/", thisTrial, "/traceParms", cmPat, ".pdf", sep=""))
+  #plot(parms)
+  #dev.off()  
 
-  pdf(file=paste(pathout,  "/", thisTrial, "/traceGamma", cmPat, ".pdf", sep=""))
-  plot(gamma.mc)
-  dev.off()
+  #pdf(file=paste(pathout,  "/", thisTrial, "/traceGamma", cmPat, ".pdf", sep=""))
+  #plot(gamma.mc)
+  #dev.off()
   
   #if (numTrials == 1){  
   if (thisTrial ==1 ){  #plot all
    # traceplots
 
-   pdf(file=paste(pathout,  "/", thisTrial, "/gelmanParms", cmPat, ".pdf", sep=""))
-   gelman.plot(combined)
-   dev.off();
+   #pdf(file=paste(pathout,  "/", thisTrial, "/gelmanParms", cmPat, ".pdf", sep=""))
+   #gelman.plot(combined)
+   #dev.off();
 
   }
 }

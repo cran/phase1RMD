@@ -306,7 +306,7 @@ if (loss.fun == 'default'){
   write.table(DLT_cycle_rec, file=paste(pathout, "/DLT_cycle_rec.txt", sep=""))	  
   
   #plot dose Trace
-  pdf(file=paste(pathout,'/doseTrace.pdf',sep=''));
+  #pdf(file=paste(pathout,'/doseTrace.pdf',sep=''));
   for (k in 1:numTrials) {
     plot(as.factor(1:length(doseTrace_AllTrials[[k]])), doseTrace_AllTrials[[k]], type='b', xlab="cohort", ylab="dose", main=paste("Trial", k),ylim=c(0,5))
   }

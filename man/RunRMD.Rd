@@ -41,10 +41,10 @@ control <- list(
  )
  
 # Load the example patient toxicity data:
-data(patdata)
+# data(patdata)
 
 # Estimate the dose-recommendation of the next patient cohort based on the toxicity data:
-fit <- RunRMD(data = patdata, control = control, trlSize = 36, tox.target = 0.28, 
-  sdose = 1:6, strDose = 1, iter = 2000, burnin = 500, thin = 1, chains = 1)
+# fit <- RunRMD(data = patdata, control = control, trlSize = 36, tox.target = 0.28, 
+#  sdose = 1:6, strDose = 1, iter = 2000, burnin = 500, thin = 1, chains = 1)
   
 }

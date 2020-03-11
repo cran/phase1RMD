@@ -29,9 +29,9 @@ The \code{Tox2nTTP} function calculates the nTTP values based on the weight matr
 }
 
 \examples{
-data(tox_matrix)
+#data(tox_matrix)
 
 # Simulate the operating characteristics of clinical trials:
-Tox2nTTP(tox = c(1,2,0))
+#Tox2nTTP(tox = c(1,2,0))
  
 }

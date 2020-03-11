@@ -94,8 +94,8 @@ parm <- function(prior = c("gamma", "invgamma", "normal"), mean=0, var=100, shap
            retval$mean <- hyper$mean
            retval$var <- hyper$var
            val <- try(chol(retval$var))
-           if (class(val) == "try-error")
-             stop("Normal variance hyperparameter must be positive definite")
+           # if (class(val) == "try-error")
+           #   stop("Normal variance hyperparameter must be positive definite")
            retval$prec <- chol2inv(val)
            dim(retval$prec) <- dim(retval$var)
          }

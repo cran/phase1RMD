@@ -8,4 +8,5 @@ importFrom("stats", "delete.response", "median", "model.frame",
              "quantile", "rbeta", "rgamma", "rnorm", "runif", "sd",
              "terms", "update", "rmultinom")
 importFrom("utils", "write.table", "modifyList", "txtProgressBar", "setTxtProgressBar")
+importFrom("utils", "data")
 S3method(plot, RunRMDVal)

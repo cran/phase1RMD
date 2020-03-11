@@ -58,16 +58,16 @@ control <- list(
 
 
 # Generate the toxicity matrix
-tox.matrix <- GenToxProb(
-    toxtype = c("Renal", "Neuro", "Heme"), 
-	intercept.alpha = c(2, 3, 4.2, 5.7), 
-	coef.beta = c(-0.2, -0.4, -0.7), 
-	cycle.gamma = 0)
+# tox.matrix <- GenToxProb(
+#    toxtype = c("Renal", "Neuro", "Heme"), 
+#	intercept.alpha = c(2, 3, 4.2, 5.7), 
+#	coef.beta = c(-0.2, -0.4, -0.7), 
+#	cycle.gamma = 0)
 
 # Simulate the dose-recommendation based on the toxicity matrix
-simu <- SimRMD(seed=2014, strDose=1, chSize=3, trlSize=12,
-    numTrials=1, sdose=1:6, MaxCycle=5, tox.target=0.28,
-    control=control, iter=10, burnin=2, thin=1, chains=1,    
-    pathout='./', tox.matrix=tox.matrix)
+# simu <- SimRMD(seed=2014, strDose=1, chSize=3, trlSize=12,
+#    numTrials=1, sdose=1:6, MaxCycle=5, tox.target=0.28,
+#    control=control, iter=10, burnin=2, thin=1, chains=1,    
+#    pathout='./', tox.matrix=tox.matrix)
 	
 }

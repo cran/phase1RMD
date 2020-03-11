@@ -317,7 +317,7 @@ SimRMDEFF <- function(numTrials = 100, trialSize = 36, doses = 1:6, cycles = 1:6
                                        p1_tau_u = 0, p2_tau_u = 1000)
                         
                         path.model <- file.path(tempdir(), "model.file.txt")
-                        R2WinBUGS::write.model(model.file, path.model)
+                        #R2WinBUGS::write.model(model.file, path.model)
                         
                         inits.list <- list(list(beta_other = c(0.1, 0.1),
                                                 beta_dose = 0.1,
@@ -543,7 +543,7 @@ SimRMDEFF <- function(numTrials = 100, trialSize = 36, doses = 1:6, cycles = 1:6
                                p1_tau_f = 0, p2_tau_f = 1000)
                 
                 path.model <- file.path(tempdir(), "model.file.txt")
-                R2WinBUGS::write.model(model.file, path.model)
+                #R2WinBUGS::write.model(model.file, path.model)
                 
                 inits.list <- list(list(beta_other = c(0.1, 0.1),
                                         beta_dose = 0.1,
@@ -772,7 +772,7 @@ SimRMDEFF <- function(numTrials = 100, trialSize = 36, doses = 1:6, cycles = 1:6
                                        p1_tau_f = 0, p2_tau_f = 1000)
                         
                         path.model <- file.path(tempdir(), "model.file.txt")
-                        R2WinBUGS::write.model(model.file, path.model)
+                        #R2WinBUGS::write.model(model.file, path.model)
                         
                         inits.list <- list(list(beta_other = c(0.1, 0.1),
                                                 beta_dose = 0.1,
@@ -989,7 +989,7 @@ SimRMDEFF <- function(numTrials = 100, trialSize = 36, doses = 1:6, cycles = 1:6
                                p1_tau_f = 0, p2_tau_f = 1000)
                 
                 path.model <- file.path(tempdir(), "model.file.txt")
-                R2WinBUGS::write.model(model.file, path.model)
+                #R2WinBUGS::write.model(model.file, path.model)
                 
                 inits.list <- list(list(beta_other = c(0.1, 0.1),
                                         beta_dose = 0.1,

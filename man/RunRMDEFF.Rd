@@ -67,12 +67,12 @@ The function prints information regarding the posterior toxicity/efficacy profil
 \examples{
 
 #load the patient efficacy data
-data(eff_dat)
-head(eff_dat)
+#data(eff_dat)
+#head(eff_dat)
 #----------------------#
 #load the patient toxicity data
-data(tox_dat)
-head(tox_dat)
+#data(tox_dat)
+#head(tox_dat)
 
 #RunRMDEFF(efficacy.dat = eff_dat, toxicity.dat = tox_dat)
 

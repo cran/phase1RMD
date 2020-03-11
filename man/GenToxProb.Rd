@@ -36,5 +36,5 @@ A four-dimension array where dimension 1 refers to doses; dimension 2 correspond
 }
 
 \examples{
-tox.matrix <- GenToxProb()
+#tox.matrix <- GenToxProb()
 }
